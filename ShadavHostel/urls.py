@@ -21,7 +21,7 @@ from Admin import views
 
 urlpatterns = [
     path('admin_custom/', admin.site.urls),
-    path('', include('Tenants.urls')),
+    path('rent/', include('Tenants.urls')),
     path('admin/', views.home, name='home'),
     path('admin/students', views.student, name='student'),
 ]
