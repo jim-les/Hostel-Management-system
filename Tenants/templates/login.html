@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% comment %} loading static {% endcomment %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadav Hosel</title>
+    <!-- include bootsrap, jquery and fontawesome cdn-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+<body>
+    <section class="login_screen">
+        <div class="container">
+            <div class="screen_section">
+                <div>
+                    <div> 
+                        {% comment %} <img src="./logo.jpg" alt="" style="width: 100%;"> {% endcomment %}
+                        <img src="{% static 'logo.jpg' %}" alt="" style="width: 100%;">
+
+                    </div>
+                    <h5 class="text-center py-4"><b>Login in your account</b></h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group py-2">
+                            <label for="username">Username</label>
+                            <input type="username" name="username" id="username" class="form-control custom-input" required>
+                        </div>
+                        <div class="form-group py-2">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="form-control custom-input" required>
+                        </div>
+        
+                        <div class="form-group py-2">
+                            <button type="submit" class="btn btn-custom">Login</button>
+                        </div>
+                        <div class="form-group py-2 ">
+                            <p class="text-center">Don't have an account? <a href="register.html">Register</a></p>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

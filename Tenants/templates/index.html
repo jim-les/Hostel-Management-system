@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% comment %} loading static {% endcomment %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadav Hosel</title>
+    <!-- include bootsrap, jquery and fontawesome cdn-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+<body>
+    <section class="login_screen">
+        <!-- <div class="menubar py-3 px-3 d-flex align-items-center justify-content-between">
+            <h5><b>Dashboard</b></h5>
+            <i class="fa fa-user-circle"></i>
+        </div> -->
+        <div class="d-flex justify-content-center">
+            <img src="./logo.jpg" alt="" style="height: 250px;">
+        </div>
+        <div class="container">
+            <div class="tenant_info_card">
+                <h6> <i class="fa fa-user" style="width: 15px;"></i> Name: Jimleston osoi</h6>  
+                <span> <i class="fa fa-home" style="width: 15px;"></i> Room No: 5</span>  <br />
+                <span> <i class="fa fa-phone" style="width: 15px;"></i> Phone: 0799522900</span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <div class="notification_dot">2</div>
+                                <i class="fa fa-bell"></i>
+                                <p><b>Notification</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <i class="fa fa-money"></i>
+                                <p><b>Payments</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <i class="fa fa-user"></i>
+                                <p><b>Profile</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <i class="fa fa-cutlery"></i>
+                                <p><b>Meals</b></p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rental_status_card">
+                <i class="fa fa-check"></i>
+                <span>Cleared </span>
+                <!-- success emoji -->
+                <span>🎉</span>
+
+            </div>
+        </div>
+    </section>
+</body>
+</html>
