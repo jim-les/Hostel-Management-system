@@ -41,26 +41,23 @@
                 <input type="text" class="form-control input_outline text-center" placeholder="Name, Amount, Arrears, Room">
             </div>
         </div>
-        <button class="btn add_student custom_btn">Add Student</button>
+        <button class="btn add_student custom_btn" style="font-size: 14px">Add Student</button>
     </div>
 
     <div class="tab_container my-4 d-flex">
-        <div class="b_tab active">
+        <div class="b_tab" data-tab="findStudent">
             <i class="fa fa-user"></i>
             <span>Find Student</span>
         </div>
-
-        <div class="b_tab">
-            <i class="fa fa-users"></i>
-            <span>All Student</span>
-        </div>
-
-        <div class="b_tab">
+        <div class="b_tab" data-tab="addStudent">
             <i class="fa fa-users"></i>
             <span>New Student</span>
         </div>
-
-        <div class="b_tab">
+        <div class="b_tab" data-tab="allStudents">
+            <i class="fa fa-users"></i>
+            <span>All Students</span>
+        </div>
+        <div class="b_tab" data-tab="terminatedStudent">
             <i class="fa fa-users"></i>
             <span>Terminated Student</span>
         </div>
@@ -68,102 +65,60 @@
 
     <div class="tab_content_container w-100">
         <div class="find_student tab_container w-100">
-            <div class="card w-100 position-relative">
+            <div class="customCard card w-100 position-relative">
                 <div class="card-header text-light">
                     <h3><b>Shadov Student List</b></h3>
                     <p>Find Student by Student Name</p>
                 </div>
                 <div class="card-body position-relative">
-                    <div class="row">
-                        <div class="col-12">
-                            <input type="text" name="studentname" id="studentname" class="input_outline" placeholder="Enter Student Name">
-                        </div>
-
-                        <div class="student_list_popup" id="student_list_popup">
-                            <div class="card">
-                                <div class="card-body">
-                                    {% for student in Students %}
-                                    <div class="student d-flex align-items-center">
-                                        <i class="fa fa-user"></i>
-                                        <span class="px-4">{{student.user.username}}</span>
-                                    </div>
-
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="student_info py-5 px-3 w-100">
-                            <h5><b>Students Information</b></h5>
-                            <div class="row w-100">
-                                <div class="col-3">
-                                    <input type="text" name="" id="fullname" class="form-control input_outline" placeholder="Student Full Name">
-                                </div>
-
-                                <div class="col-3">
-                                    <input type="text" name="" id="room" class="form-control  input_outline" placeholder="Room No.">
-                                </div>
-
-                                <div class="col-3">
-                                    <input type="text" name="" id="rent" class="form-control  input_outline" placeholder="Rent Amount.">
-                                </div>
-
-                                <div class="col-3">
-                                    <input type="text" name="" id="arrears" class="form-control  input_outline" placeholder="Arrears.">
-                                </div>
-                                <div class="col-3 py-3 d-flex align-items-center" style="gap: 10px">
-                                    <input type="checkbox" name="" id="meal" class="form-control" style="width: 70px;"> <h5>Meal</h5>
-                                </div>
-                                <div class="col-3 py-3">
-                                    <input type="text" name="" id="adm" class="form-control  input_outline" placeholder="Adm Date.">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="payment_info py-4 px-3 w-100">
-                            <h5><b>Rent Payment Information</b></h5>
-                            <table class="table table-striped w-100">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>AMOUNT</th>
-                                        <th>MONTH</th>
-                                        <th>REF</th>
-                                        <th>DATE</th>
-                                        <th>BAL</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-
-                        <div class="payment_info py-5 px-3 w-100">
-                            <h5><b>Meal Payment Information</b></h5>
-                            <table class="table table-striped w-100">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>AMOUNT</th>
-                                        <th>MONTH</th>
-                                        <th>REF</th>
-                                        <th>DATE</th>
-                                        <th>BAL</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+                    <div class="content findStudent_content">
+                        {% include 'findStudent.html' %}
                     </div>
+                    <div class="content addStudent_content">
+                        {% include 'AddStudent.html' %}
+                    </div>  
+                    <div class="content allStudents_content">
+                        {% include 'AllStudents.html' %}
+                    </div>  
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $('#student_list_popup').hide();
 
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
     $(document).ready(function() {
-        $('#studentname').on('input', function() {
-            $('#student_list_popup').show();
+        // Check local storage for the last active tab
+        const lastTab = localStorage.getItem('lastTab') || 'findStudent';
+
+        // Hide all tab contents initially
+        $('.tab_content_container .content').hide();
+        // Show the content of the last active tab
+        $(`.tab_content_container .${lastTab}_content`).show();
+        // Activate the last active tab
+        $(`.b_tab[data-tab="${lastTab}"]`).addClass('active');
+
+        // Tab click handler
+        $('.b_tab').click(function() {
+            // Get the tab to show
+            const tab = $(this).data('tab');
+
+            // Save the selected tab to local storage
+            localStorage.setItem('lastTab', tab);
+
+            // Remove 'active' class from all tabs
+            $('.b_tab').removeClass('active');
+            // Add 'active' class to the clicked tab
+            $(this).addClass('active');
+
+            // Hide all tab contents
+            $('.tab_content_container .content').hide();
+            // Show the clicked tab's content
+            $(`.tab_content_container .${tab}_content`).show();
         });
     });
 </script>
+
 {% endblock %}

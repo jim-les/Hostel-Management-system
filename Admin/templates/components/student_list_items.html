@@ -1,0 +1,11 @@
+{% if Students|length == 0 %}
+<div class="alert alert-info">No students found</div>
+{% endif %}
+
+{% for student in Students %}
+<div class="student d-flex align-items-center student-item" data-student-id="{{ student.id }}">
+    <i class="fa fa-user"></i>
+    <span class="px-4">{{ student.user.username }}</span>
+</div>
+{% endfor %}
+

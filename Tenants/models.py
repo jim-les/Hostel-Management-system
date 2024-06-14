@@ -9,16 +9,13 @@ class Student(models.Model):
     has_food = models.BooleanField(default=False)
     arrears = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     adm_date = models.DateField(null=True)
+    number = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} (Room {self.room_number})"
 
     def update_arrears(self):
         total_rent = self.rent_amount
-        # if self.has_food:
-        #     total_rent += 2000  # Example additional cost for food
-
-        # Calculate the arrears
         payments = self.rentpayment_set.all()
         total_paid = sum(payment.amount for payment in payments)
         self.arrears = total_rent - total_paid + self.arrears

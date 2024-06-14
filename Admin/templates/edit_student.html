@@ -1,0 +1,165 @@
+<!-- templates/myapp/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Student - Shadav Hostel{% endblock %}
+
+{% block content %}
+<style>
+    .custom_btn{
+        background: #174EA6;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .student_list_popup{
+        width: 400px;
+        position: absolute;
+        top: 0;
+        right: 30%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    }
+    .student{
+        padding: 10px 10px;
+
+    }
+    .student:hover{
+        background-color: #174EA6;
+        color: white;
+    }
+</style>
+<style>
+    .student_info{
+        /* align in 3 cols in each row */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        columns: 3;
+    }
+    .fa-user-circle{
+        font-size: 14em;
+        color: #174EA6;
+    
+    }
+</style>
+
+{% comment %} search student popup tab {% endcomment %}
+
+
+<div class="student_content px-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="search_form">
+            <div class="form-group">
+                <input type="text" class="form-control input_outline text-center" placeholder="Name, Amount, Arrears, Room">
+            </div>
+        </div>
+        <button class="btn add_student custom_btn" style="font-size: 14px">Add Student</button>
+    </div>
+
+    <div class="tab_content_container w-100">
+        <div class="find_student tab_container w-100">
+            <div class="customCard card w-100 position-relative">
+                <div class="card-header text-light">
+                    <h3><b>Shadov Student List</b></h3>
+                    <p>Find Student by Student Name</p>
+                </div>
+                <div class="card-body position-relative">
+                    <div class="content editStudent_content">
+                        {% comment %} add students {% endcomment %}
+                        
+                        <div class="card-body position-relative">
+                            <!-- templates/myapp/add_student.html -->
+                        <form method="post" enctype="multipart/form-data" >
+                            {% csrf_token %}
+                            <div class="row">
+                                <!-- add profile pic in this col -->
+                                <div class="col-4">
+                                    <div class="form-group text-center">
+                                        <i class="fa fa-user-circle" id="profile_pic_icon"></i>
+                                        <img src="" alt="Profile Picture" id="profile_pic" style="width: 200px; height: 200px;"/>
+                                        <input type="file" name="profile" id="profile" class="form-control mt-2" accept="image/*">
+                                    </div>
+                                </div>  
+                                <div class="col-8">
+                                    <div class="student_info">
+                                        <div class="form-group">
+                                            <label for="fullname">First Name</label>
+                                            <input type="text" name="first_name" class="form-control input_outline" placeholder="First Name" value="{{ student.user.first_name}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fullname">Last Name</label>
+                                            <input type="text" name="last_name" class="form-control input_outline" placeholder="Last Name"  value="{{ student.user.last_name}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="room">Room No.</label>
+                                            <input type="text" name="room_number" class="form-control input_outline" placeholder="Room No." value="{{ student.room_number}}">
+                                        </div>
+                                    </div>
+                                    <div class="student_info">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" name="email" class="form-control input_outline" placeholder="Email" value="{{ student.user.email}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone">Phone</label>
+                                            <input type="text" name="phone" class="form-control input_outline" placeholder="Phone" value="{{ student.phone }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="adm">Adm Date</label>
+                                            <input type="date" name="adm_date" class="form-control input_outline" value="{{ student.adm_date|date:'Y-m-d' }}">
+                                        </div>
+                                    </div>
+                                    <div class="student_info">
+                                        <div class="form-group">
+                                            <label for="rent">Rent Amount</label>
+                                            <input type="text" name="rent_amount" class="form-control input_outline" value="{{ student.rent_amount }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="arrears">Arrears</label>
+                                            <input type="text" name="arrears" class="form-control input_outline" value="{{ student.arrears }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="meal" class="mx-4">Meal</label>
+                                            <input type="checkbox" name="has_food" class="form-control" style="width: 70px;" {% if student.has_food %} checked {% endif %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex justify-content-end">
+                                        <button type="submit" class="btn add_student custom_btn" style="font-size: 14px">Update Student</button>
+                                    </div>
+                                </div>
+                            </div>  
+                        </form> 
+                        </div>
+
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// JavaScript for Profile Picture Preview
+$("#profile_pic").hide();
+document.getElementById('profile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $('#profile_pic_icon').hide();
+            $('#profile_pic').show();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile_pic').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+{% endblock %}

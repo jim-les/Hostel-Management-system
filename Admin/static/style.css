@@ -9,6 +9,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 12px;
 }
 
 body{
@@ -18,12 +19,16 @@ body{
     box-sizing: border-box;
 }
 
+.customCard{
+    box-shadow: 0 0 10 rgba(0, 0, 0, 0.5);
+}
+
 .input_outline{
     border: none;
     border-bottom: 1px solid #174EA6;
     background: rgb(240, 240, 240);
     color: #174EA6;
-    font-size: 20px;
+    font-size: 14px;
     border-radius: 0;
     padding: 10px;
     margin: 5px 0;
@@ -66,6 +71,7 @@ body{
     gap: 20px;
 }
 
+
 .popup_card .card-footer button:first-child{
     background-color: #174EA6;
     color: white;
@@ -90,25 +96,39 @@ body{
     gap: 50px;
 }
 
+.admin_page{
+    width: 100%;
+    display: flex;
+    gap: 20px;    
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main_content{
+    width: 100%;
+    overflow: auto;
+}
+
+.card{
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+
+}
+
 /* sidebarsection */
 .sidebar_container{
-    position: fixed;
-    left: 0;
-    top: 0;
     height: 100vh;
-    width: fit-content;
-    min-width: 350px;
+    width: 250px;
     background: var(--primary);
     padding: 10px 20px;
-    /* transition: 0.5s; */
     z-index: 1000;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar_item{
-    padding: 20px 20px;
+    padding: 13px 20px;
     border-radius: 8px;
-    margin: 10px 0;
+    margin: 4px 0;
 }
 
 .sidebar_item.active{
@@ -129,9 +149,9 @@ body{
 .sidebar_item a{
     text-decoration: none;
     color: rgb(41, 41, 41);
-    font-size: 22px;
+    font-size: 20px;
     display: block;
-    padding: 10px;
+    padding: 5px 10px;
     /* transition: 0.5s; */
     display: flex;
     gap: 20px;
@@ -194,11 +214,11 @@ body{
 
 .custom_btn{
     background: #174EA6;
-    color: white;
-    padding: 10px 20px;
+    color: #ffffff;
+    padding: 5px 20px;
     border: none;
     border-radius: 8px;
-    font-size: 20px;
+    font-size: 14px;
     cursor: pointer;
 }
 

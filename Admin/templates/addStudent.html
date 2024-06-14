@@ -1,0 +1,97 @@
+{% comment %} add students {% endcomment %}
+<style>
+    .student_info{
+        /* align in 3 cols in each row */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        columns: 3;
+    }
+    .fa-user-circle{
+        font-size: 14em;
+        color: #174EA6;
+    
+    }
+</style>
+<div class="card-body position-relative">
+    <!-- templates/myapp/add_student.html -->
+<form method="post" enctype="multipart/form-data" action="{% url 'add_student' %}">
+    {% csrf_token %}
+    <div class="row">
+        <!-- add profile pic in this col -->
+        <div class="col-4">
+            <div class="form-group text-center">
+                <i class="fa fa-user-circle" id="profile_pic_icon"></i>
+                <img src="" alt="Profile Picture" id="profile_pic" style="width: 200px; height: 200px;"/>
+                <input type="file" name="profile" id="profile" class="form-control mt-2" accept="image/*">
+            </div>
+        </div>  
+        <div class="col-8">
+            <div class="student_info">
+                <div class="form-group">
+                    <label for="fullname">First Name</label>
+                    <input type="text" name="first_name" class="form-control input_outline" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label for="fullname">Last Name</label>
+                    <input type="text" name="last_name" class="form-control input_outline" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label for="room">Room No.</label>
+                    <input type="text" name="room_number" class="form-control input_outline" placeholder="Room No.">
+                </div>
+            </div>
+            <div class="student_info">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control input_outline" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="text" name="phone" class="form-control input_outline" placeholder="Phone">
+                </div>
+                <div class="form-group">
+                    <label for="adm">Adm Date</label>
+                    <input type="date" name="adm_date" class="form-control input_outline">
+                </div>
+            </div>
+            <div class="student_info">
+                <div class="form-group">
+                    <label for="rent">Rent Amount</label>
+                    <input type="text" name="rent_amount" class="form-control input_outline" value="3500">
+                </div>
+                <div class="form-group">
+                    <label for="arrears">Arrears</label>
+                    <input type="text" name="arrears" class="form-control input_outline" value="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="meal" class="mx-4">Meal</label>
+                    <input type="checkbox" name="has_food" class="form-control" style="width: 70px;">
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+                <button type="submit" class="btn add_student custom_btn" style="font-size: 14px">Add Student</button>
+            </div>
+        </div>
+    </div>  
+</form> 
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+ // JavaScript for Profile Picture Preview
+ $("#profile_pic").hide();
+ document.getElementById('profile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $('#profile_pic_icon').hide();
+            $('#profile_pic').show();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile_pic').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

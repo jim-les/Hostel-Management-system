@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Room No.</th>
+            <th scope="col">Rent</th>
+            <th scope="col">Arrears</th>
+            <th scope="col">Meal</th>
+            <th scope="col">Adm Date</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in Students %}
+        <tr class="student">
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.room_number }}</td>
+            <td>{{ student.rent_amount }}</td>
+            <td>{{ student.arrears }}</td>
+            <td>{{ student.has_food }}</td>
+            <td>{{ student.adm_date }}</td>
+            <td>
+                <a href="{% url 'edit_student' student.id %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'delete_student' student.id %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
