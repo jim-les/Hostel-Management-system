@@ -125,6 +125,12 @@ body{
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
+.sidebar_container_active{
+    max-width: 100px;
+}
+
+
+
 .sidebar_item{
     padding: 13px 20px;
     border-radius: 8px;
@@ -138,7 +144,6 @@ body{
 .sidebar_item:hover{
     background: #174EA6;
 }
-
 
 .sidebar_item:hover a{
     color: white;
@@ -159,7 +164,10 @@ body{
     align-items: center;
 }
 
-
+.sidebar_container_active i{
+    font-size: 100px;
+    color: green;
+}
 
 /* topbar section */
 .topbar_section .toggle_menu{
