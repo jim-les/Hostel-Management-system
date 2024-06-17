@@ -5,6 +5,35 @@
         top: 0;
         z-index: 1000;
     }
+    @media screen and (max-width: 768px){
+        body{
+            overflow-x: scroll;
+            width: 100%;
+        }
+        #student_list_popup{
+            right: 0;
+            top: 10%;
+            width: 100%;
+        }
+        #student_details{
+            /* display: block; */
+        }
+
+        .card-body{
+            overflow-x: scroll;
+            width: 100%;
+        }
+
+        .rent_payment_table{
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        input[type="text"]{
+            width: 100%;
+        }
+        
+    }
 </style>
 <div class="row position-relative">
     <div class="col-12">
@@ -22,27 +51,27 @@
     <div class="student_info py-5 px-3 w-100" id="student_details">
         <h5><b>Student Information</b></h5>
         <div class="row w-100">
-            <div class="col-3">
+            <div class="col-md-3 col-12">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" class="form-control input_outline" placeholder="Student Full Name" disabled>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 col-12">
                 <label for="room">Room No.</label>
                 <input type="text" id="room" class="form-control input_outline" placeholder="Room No." disabled>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 col-12">
                 <label for="rent">Rent Amount</label>
                 <input type="text" id="rent" class="form-control input_outline" placeholder="Rent Amount." disabled>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 col-12">
                 <label for="arrears">Arrears</label>
                 <input type="text" id="arrears" class="form-control input_outline" placeholder="Arrears." disabled>
             </div>
-            <div class="col-3 py-3 d-flex align-items-center" style="gap: 10px">
+            <div class="col-md-3 col-12 py-3 d-flex align-items-center" style="gap: 10px">
                 <h5>Has Meals</h5>
                 <input type="checkbox" id="meal" class="form-control" style="width: 70px;" disabled>
             </div>
-            <div class="col-3 py-3">
+            <div class="col-md-3 col-12 py-3">
                 <label for="adm">Adm Date</label>
                 <input type="text" id="adm" class="form-control input_outline" placeholder="Adm Date." disabled>
             </div>

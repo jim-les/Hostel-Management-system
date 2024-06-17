@@ -3,20 +3,57 @@
 {% block title %}Transaction{% endblock %}
 
 {% block content %}
+<style>
+    @media screen and (max-width: 768px){
+        .add_transaction_col_btn{
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            z-index: 1000;
+            background-color: white;
+            color: black;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+        }
+
+        .transaction_card .card-body{
+            height: 100vh;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .card-header{
+            width: 100%;
+        }
+    }
+
+    .add_transaction_col{
+        display: none; /* Initially hidden */
+    }
+
+    .show{
+        display: block; /* Show the element */
+        height: 85vh;
+    }
+</style>
+
+<div class="d-flex justify-content-end">
+    <div class="text-right d-flex justify-content-center align-items-center m-2 add_transaction_col_btn" data-target=".add_transaction_col">
+        <i class="fa fa-plus"></i>
+    </div>
+</div>
 <div class="row px-4">
     <div class="col-md-8 col-12">
-        <div class="d-flex justify-content-end">
-            <div class="text-right d-flex justify-content-center align-items-center text-light m-2 add_transaction_col_btn" style="background-color: gray; width: 30px; height: 30px; border-radius: 100%;">
-                <i class="fa fa-plus "></i>
-            </div>
-        </div>
 
-        <div class="card" style="height: 80vh;">
-            <div class="card-header text-light">
+        <div class="card transaction_card" style="height: 80vh;">
+            <div class="card-header text-light w-100">
                 <h4 class="card-title">Transaction List</h4>
+                <p>List of all transactions from 2024 </p>
             </div>
             <div class="card-body">
-                <div class="search_container d-flex justify-content-between">
+                <div class="search_container w-100 d-flex justify-content-between">
                     <div>
                         <i class="fa fa-print"></i>
                         <span>PRINT</span>
@@ -35,10 +72,9 @@
                             <th scope="col">RECEIPT</th>
                             <th scope="col">MPESA REF</th>
                             <th scope="col">DATE</th>
-                            <!-- <th scope="col">ACTION</th> -->
                         </tr>
                     </thead>
-                    <tbody >
+                    <tbody>
                         {% for payment in RentPayment %}
                             <tr>
                                 <th style="font-size: 11px;" scope="row">{{ forloop.counter }}</th>
@@ -48,11 +84,6 @@
                                 <td style="font-size: 11px;">{{ payment.reciept }}</td>
                                 <td style="font-size: 11px;">{{ payment.mpesa_ref }}</td>
                                 <td style="font-size: 11px;">{{ payment.date_paid }}</td>
-                                <!-- <td style="font-size: 12px;" class="text-center">
-                                    <a href="{% url 'delete_rent_payment' payment.id %}" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </td> -->
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -61,8 +92,7 @@
         </div>
     </div>
 
-    <div class="col-4 add_transaction_col">
-        
+    <div class="col-md-4 col-12 add_transaction_col">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Add Transaction</h4>
@@ -100,7 +130,7 @@
                     <div class="form-group">
                         <button type="button" class="btn btn-primary" id="confirmAddTransaction">Add Transaction</button>
                     </div>
-                </form> 
+                </form>
             </div>
         </div>
     </div>
@@ -108,6 +138,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var addTransactionBtn = document.querySelector('.add_transaction_col_btn');
+        var addTransactionCol = document.querySelector('.add_transaction_col');
+
+        addTransactionBtn.addEventListener('click', function() {
+            addTransactionCol.classList.toggle('show');
+            $('.col-md-8').toggle('hide')
+        });
+
         var confirmButton = document.getElementById('confirmAddTransaction');
         
         confirmButton.addEventListener('click', function() {
@@ -131,16 +169,12 @@
             if (confirm(confirmationMessage)) {
                 localStorage.setItem('transactionConfirmed', 'true');
                 document.getElementById('transactionForm').submit();
-            }else {
+            } else {
                 // Clear the stored decision if the user cancels
                 localStorage.removeItem('transactionConfirmed');
             }
         });
     });
-</script>
-
-<script>
-    // onclick add_transaction_col_btn
 </script>
 
 {% endblock %}

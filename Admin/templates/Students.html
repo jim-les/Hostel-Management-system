@@ -29,6 +29,42 @@
         background-color: #174EA6;
         color: white;
     }
+    @media screen and (max-width: 768px){
+        body{
+            overflow-x: scroll;
+            width: 100%;
+        }
+        #student_list_popup{
+            right: 0;
+            top: 10%;
+            width: 100%;
+        }
+        #student_details{
+            /* display: block; */
+        }
+
+        .card-body{
+            overflow-x: scroll;
+            width: 100%;
+        }
+
+        .add_student{
+            display: none;
+        }
+
+        .rent_payment_table{
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .tab_container{
+            width: 100%;
+            overflow-x: scroll;
+        }
+        .search_input{
+            width: 100%;
+        }
+    }
 </style>
 
 {% comment %} search student popup tab {% endcomment %}
@@ -38,7 +74,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <div class="search_form">
             <div class="form-group">
-                <input type="text" class="form-control input_outline text-center" placeholder="Name, Amount, Arrears, Room">
+                <input type="text" class="form-control input_outline text-center search_input" placeholder="Name, Amount, Arrears, Room">
             </div>
         </div>
         <button class="btn add_student custom_btn" style="font-size: 14px">Add Student</button>
