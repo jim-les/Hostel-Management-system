@@ -213,6 +213,7 @@ img {
          <img src="{% static 'login-bg.png' %}" alt="login image" class="login__img">
 
          <form action="" class="login__form" method="post">
+            {% csrf_token %}
             {% if messages %}
             <div class="messages">
                {% for message in messages %}
