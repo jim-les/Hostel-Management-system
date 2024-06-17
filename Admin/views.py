@@ -1,10 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from Tenants.models import *
+from Tenants.models import Student, RentPayment
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
-    return render(request, 'base.html')
+    return render(request, 'dashboard.html')
 
+@login_required
 def student(request):
     students = Student.objects.all()
     context = {
@@ -113,4 +116,69 @@ def search_student(request):
     }
     return render(request, 'components/student_list_items.html', context)
 
+def transaction(request):
+    students = Student.objects.all()
+    rentpayment = RentPayment.objects.all()
+    context = {
+        "Students": students,
+        "RentPayment": rentpayment,
+    }
+    return render(request, 'transaction/transaction.html', context)
+
+
+def add_rentpayment(request):
+    students = Student.objects.all()
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        amount = request.POST.get('amount')
+        month = request.POST.get('month')
+        date = request.POST.get('date')
+        mpesa_ref = request.POST.get('mpesa_ref')
+        reciept = request.POST.get('reciept')
+        
+        student = Student.objects.get(id=full_name)
+        RentPayment.objects.create(
+            student=student,
+            amount=amount,
+            month_paid=month,
+            date_paid=date,
+            mpesa_ref=mpesa_ref,
+            reciept=reciept
+        )
+
+        message = 'Rent payment added successfully'
+    else:
+        message ='Invalid request method'
     
+    rentpayment = RentPayment.objects.all()
+    context = {
+        "Students": students,
+        "RentPayment": rentpayment,
+    }
+    return render(request, 'transaction/transaction.html', context)
+    
+
+
+def get_student_rent_payments(request):
+    student_id = request.GET.get('student_id')
+    rent_payments = RentPayment.objects.filter(student_id=student_id).order_by('date_paid')
+    payments_data = []
+    for payment in rent_payments:
+        payments_data.append({
+            'amount': float(payment.amount),
+            'month_paid': payment.month_paid,
+            'reciept': payment.reciept,
+            'mpesa_ref': payment.mpesa_ref,
+            'date_paid': payment.date_paid.strftime('%Y-%m-%d'),
+            'balance': float(payment.student.arrears)
+        })
+    return JsonResponse(payments_data, safe=False)
+
+def delete_rent_payment(request, payment_id):
+    payment = RentPayment.objects.get(id=payment_id)
+    student = payment.student
+    payment.delete()
+    return redirect('transaction')
+
+def underContruction(request):
+    return render(request, 'underConstruction.html')

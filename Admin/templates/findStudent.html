@@ -57,11 +57,15 @@
                     <th>#</th>
                     <th>AMOUNT</th>
                     <th>MONTH</th>
+                    <th>RECIEPT NO.</th>
                     <th>REF</th>
                     <th>DATE</th>
                     <th>BAL</th>
                 </tr>
             </thead>
+            <tbody>
+
+            </tbody>
         </table>
     </div>
 
@@ -82,74 +86,142 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
+    let studentPaymentAmount = 100
+    document.addEventListener('DOMContentLoaded', function() {
         var typingTimer;
         var doneTypingInterval = 300; // milliseconds
 
-        $('#studentname').on('input', function() {
+        var studentNameInput = document.getElementById('studentname');
+        var studentListPopup = document.getElementById('student_list_popup');
+        var studentListBody = document.getElementById('student_list_body');
+
+        studentNameInput.addEventListener('input', function() {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(performSearch, doneTypingInterval);
         });
 
         function performSearch() {
-            var studentName = $('#studentname').val().trim();
+            var studentName = studentNameInput.value.trim();
             if (studentName.length < 3) {
-                $('#student_list_popup').hide();
+                studentListPopup.style.display = 'none';
                 return;
             }
 
-            $.ajax({
-                url: '{% url "search_student" %}',
-                method: 'GET',
-                data: {
-                    q: studentName
-                },
-                success: function(data) {
-                    $('#student_list_body').html(data);
-                    $('#student_list_popup').show();
-                },
-                error: function(err) {
-                    console.error('Error fetching students:', err);
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `{% url "search_student" %}?q=` + encodeURIComponent(studentName), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    studentListBody.innerHTML = xhr.responseText;
+                    studentListPopup.style.display = 'block';
+                } else {
+                    console.error('Error fetching students:', xhr.statusText);
                 }
-            });
+            };
+            xhr.onerror = function() {
+                console.error('Request failed');
+            };
+            xhr.send();
         }
 
         // Hide popup when clicking outside
-        $(document).mouseup(function(e) {
-            var container = $("#student_list_popup");
-            if (!container.is(e.target) && container.has(e.target).length === 0) {
-                container.hide();
+        document.addEventListener('mouseup', function(e) {
+            if (!studentListPopup.contains(e.target)) {
+                studentListPopup.style.display = 'none';
             }
         });
 
         // Handle click on student item
-        $(document).on('click', '.student-item', function() {
-            var studentId = $(this).data('student-id');
-            $.ajax({
-                url: '{% url "get_student_details" %}',
-                method: 'GET',
-                data: {
-                    student_id: studentId
-                },
-                success: function(data) {
-                    fillStudentDetails(data);
-                    $('#student_list_popup').hide();
-                },
-                error: function(err) {
-                    console.error('Error fetching student details:', err);
-                }
-            });
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('student-item')) {
+                var studentId = e.target.dataset.studentId;
+                fetchStudentDetails(studentId);
+                fetchRentPaymentDetails(studentId);
+            }
         });
 
+        function fetchStudentDetails(studentId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `{% url "get_student_details" %}?student_id=` + encodeURIComponent(studentId), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var studentData = JSON.parse(xhr.responseText);
+                    fillStudentDetails(studentData);
+                    studentListPopup.style.display = 'none';
+                } else {
+                    console.error('Error fetching student details:', xhr.statusText);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Request failed');
+            };
+            xhr.send();
+        }
+
+        function fetchRentPaymentDetails(studentId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `{% url "get_student_rent_payments" %}?student_id=` + encodeURIComponent(studentId), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var paymentData = JSON.parse(xhr.responseText);
+                    fillRentPaymentTable(paymentData);
+                } else {
+                    console.error('Error fetching rent payments:', xhr.statusText);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Request failed');
+            };
+            xhr.send();
+        }
+
         function fillStudentDetails(studentData) {
-            $('#fullname').val(studentData.fullname);
-            $('#room').val(studentData.room_number);
-            $('#rent').val(studentData.rent_amount);
-            $('#arrears').val(studentData.arrears);
-            $('#meal').prop('checked', studentData.has_food);
-            $('#adm').val(studentData.adm_date);
+            document.getElementById('fullname').value = studentData.fullname;
+            document.getElementById('room').value = studentData.room_number;
+            document.getElementById('rent').value = studentData.rent_amount;
+            document.getElementById('arrears').value = studentData.arrears;
+            document.getElementById('meal').checked = studentData.has_food;
+            document.getElementById('adm').value = studentData.adm_date;
+            studentPaymentAmount = studentData.rent_amount;
+        }
+
+        function fillRentPaymentTable(paymentData) {
+            var tableBody = document.getElementById('rent_payment_table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear previous entries
+
+            paymentData.forEach(function(payment, index) {
+                var row = document.createElement('tr');
+
+                var cellIndex = document.createElement('td');
+                cellIndex.textContent = index + 1;
+                row.appendChild(cellIndex);
+
+                var cellAmount = document.createElement('td');
+                cellAmount.textContent = payment.amount;
+                row.appendChild(cellAmount);
+
+                var cellMonth = document.createElement('td');
+                cellMonth.textContent = payment.month_paid;
+                row.appendChild(cellMonth);
+
+                var cellMonth = document.createElement('td');
+                cellMonth.textContent = payment.reciept;
+                row.appendChild(cellMonth);
+
+                var cellRef = document.createElement('td');
+                cellRef.textContent = payment.mpesa_ref;
+                row.appendChild(cellRef);
+
+                var cellDate = document.createElement('td');
+                cellDate.textContent = payment.date_paid;
+                row.appendChild(cellDate);
+
+                var cellBal = document.createElement('td');
+                cellBal.textContent = studentPaymentAmount - payment.amount;
+                row.appendChild(cellBal);
+
+                tableBody.appendChild(row);
+            });
         }
     });
 </script>

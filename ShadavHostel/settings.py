@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Tenants',
-    'Admin'
+    'Admin',
+    'Account'
 ]
 
 MIDDLEWARE = [
@@ -122,9 +123,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # Make sure this path exists
 ]
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'login_view'
 LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login_view'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -3,6 +3,8 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static './web/favicon.ico' %}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadav Hostel</title>
     <!-- bootrap cdn -->
@@ -13,12 +15,25 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
 
 </head>
+<style>
+    .sidebar_item i{
+        color: #174EA6;
+    }
+
+    .sidebar_item:hover i{
+        color: white
+    }
+</style>
 <body>
     <div class="admin_page w-100">
         <div class="sidebar_container">
             <div class="web_title py-4 text-center">
-                <h3>Shadav Hostel</h3>
+                <div>
+                    <img src="{% static 'shadavlogo.jpeg' %}" alt="" style="width: 100%; border-radius: 15%;">
+                </div>
+                <!-- <h3 class="text-primary">Shadav Hostel</h3> -->
             </div>
+            <hr>
             <div class="sidebar_items">
                 <div class="sidebar_item {% if request.path == '/admin' %}active{% endif %}">
                     <a href="{% url 'home' %}">
@@ -33,17 +48,40 @@
                     </a>
                 </div>
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
-                    <a href="loan.php">
+                    <a href="{% url 'transaction' %}">
                         <i class="fas fa-money-check-alt"></i>
                         <span>Transaction</span>
                     </a>
                 </div>
-                <div class="sidebar_item {% if request.path|slice:"1:" == 'payment/' %}active{% endif %}">
-                    <a href="payment.php">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>Transactions</span>
+
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
+                    <a href="#">
+                        <i class="fa fa-chart-line"></i>
+                        <span>Statistics</span>
                     </a>
                 </div>
+
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
+                    <a href="{% url 'transaction' %}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Sms</span>
+                    </a>
+                </div>
+
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
+                    <a href="{% url 'transaction' %}">
+                        <i class="fas fa-money-check-alt"></i>
+                        <span>Backup</span>
+                    </a>
+                </div>
+
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
+                    <a href="{% url 'transaction' %}">
+                        <i class="fas fa-money-check-alt"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+<!--                 
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'reports/' %}active{% endif %}">
                     <a href="reports.php">
                         <i class="fas fa-chart-line"></i>
@@ -61,14 +99,14 @@
                         <i class="fas fa-database"></i>
                         <span>Backup</span>
                     </a>
-                </div>
+                </div> -->
             </div>
         </div>   
         
         <div class="main_content">
             <div class="top_bar py-4 d-flex justify-content-between px-4">
                 <div class="top_bar_items">
-                    <div class="fa fa-bars" style="font-size: 20px;"></div>
+                    <div class="fa fa-bars" id="toggleSidebarBtn" style="font-size: 20px;"></div>
                 </div>
 
                 <div class="top_bar_items d-flex" style="grid-gap: 20px;">
@@ -78,11 +116,13 @@
                     </div>
                     <div class="top_bar_item">
                         <i class="fas fa-user"></i>
-                        <span>Admin</span>
+                        <span>{{user.username}}</span>
                     </div>
                     <div class="top_bar_item">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <a href="{% url 'logout_view' %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -91,4 +131,19 @@
         </div>
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#toggleSidebarBtn').click(function(){
+            $('.web_title').toggle('show');
+            $('.sidebar_container span').toggle('show');
+            // toggle the css for the sidebar_container i to fontsize 70px
+            $('.sidebar_container i').toggleClass('fa-2x'); 
+            $('.sidebar_container i').css('color', 'blue')
+            // toggle the css for the sidebar_container width to 100px
+            $('.sidebar_container').toggleClass('sidebar_container_active');
+        });
+    });
+
+</script>
 </html>

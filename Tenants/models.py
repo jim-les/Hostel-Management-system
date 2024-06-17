@@ -18,7 +18,7 @@ class Student(models.Model):
         total_rent = self.rent_amount
         payments = self.rentpayment_set.all()
         total_paid = sum(payment.amount for payment in payments)
-        self.arrears = total_rent - total_paid + self.arrears
+        self.arrears = total_rent - total_paid
         self.save()
 
 class RentPayment(models.Model):
@@ -27,6 +27,7 @@ class RentPayment(models.Model):
     month_paid = models.CharField(max_length=100)
     mpesa_ref = models.CharField(max_length=15)
     date_paid = models.DateTimeField(auto_now_add=True)
+    reciept = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return f"{self.student.user.username} - {self.amount} on {self.date_paid.strftime('%Y-%m-%d')}"

@@ -5,7 +5,7 @@
 {% for student in Students %}
 <div class="student d-flex align-items-center student-item" data-student-id="{{ student.id }}">
     <i class="fa fa-user"></i>
-    <span class="px-4">{{ student.user.username }}</span>
+    <span class="px-4">{{ student.user.first_name }} {{ student.user.last_name }}</span>
 </div>
 {% endfor %}
 
