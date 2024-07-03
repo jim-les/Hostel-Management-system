@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'Tenants',
     'Admin',
     'Account',
-    'twilio',
 ]
 
 MIDDLEWARE = [
@@ -126,10 +125,6 @@ STATICFILES_DIRS = [
 LOGIN_URL = 'login_view'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login_view'
-
-TWILIO_ACCOUNT_SID = 'your_account_sid'
-TWILIO_AUTH_TOKEN = 'your_auth_token'
-TWILIO_PHONE_NUMBER = 'your_twilio_phone_number'
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
