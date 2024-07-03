@@ -68,15 +68,15 @@
                         <span>Students</span>
                     </a>
                 </div>
-                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'transaction/' %}active{% endif %}">
                     <a href="{% url 'transaction' %}">
                         <i class="fas fa-money-check-alt"></i>
                         <span>Transaction</span>
                     </a>
                 </div>
 
-                <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
-                    <a href="#">
+                <div class="sidebar_item {% if request.path|slice:"1:" == 'statistics/' %}active{% endif %}">
+                    <a href="{% url 'statistics' %}">
                         <i class="fa fa-chart-line"></i>
                         <span>Statistics</span>
                     </a>
@@ -132,8 +132,10 @@
 
                 <div class="top_bar_items d-flex" style="grid-gap: 20px;">
                     <div class="top_bar_item">
-                        <i class="fas fa-eye"></i>
-                        <span>View Site</span>
+                        <a href="/admin_custom">
+                            <i class="fas fa-eye"></i>
+                            <span>View Site</span>
+                        </a>
                     </div>
                     <div class="top_bar_item">
                         <i class="fas fa-user"></i>

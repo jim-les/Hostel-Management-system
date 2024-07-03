@@ -89,7 +89,7 @@
                     <th>RECIEPT NO.</th>
                     <th>REF</th>
                     <th>DATE</th>
-                    <th>BAL</th>
+                    <!-- <th>BAL</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -108,7 +108,7 @@
                     <th>MONTH</th>
                     <th>REF</th>
                     <th>DATE</th>
-                    <th>BAL</th>
+                    <!-- <th>BAL</th> -->
                 </tr>
             </thead>
         </table>
@@ -218,6 +218,8 @@
             var tableBody = document.getElementById('rent_payment_table').querySelector('tbody');
             tableBody.innerHTML = ''; // Clear previous entries
 
+            const rent_arrears = 
+
             paymentData.forEach(function(payment, index) {
                 var row = document.createElement('tr');
 
@@ -245,9 +247,9 @@
                 cellDate.textContent = payment.date_paid;
                 row.appendChild(cellDate);
 
-                var cellBal = document.createElement('td');
-                cellBal.textContent = studentPaymentAmount - payment.amount;
-                row.appendChild(cellBal);
+                // var cellBal = document.createElement('td');
+                // cellBal.textContent = studentPaymentAmount - payment.amount;
+                // row.appendChild(cellBal);
 
                 tableBody.appendChild(row);
             });

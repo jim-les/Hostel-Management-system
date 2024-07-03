@@ -1,0 +1,78 @@
+{% extends '../base.html' %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- transaction bar graph chart for months rent arrears -->
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Rent Payment Statistics for 2024</h4>
+    </div>
+    <div class="card-body">
+        <canvas id="rentPaymentChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('rentPaymentChart').getContext('2d');
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var paidAmounts = [
+            {% for month in months %}
+                {% if forloop.first %}[{{ monthPayments[month]['paid']|default:0 }}]
+                {% else %}, [{{ monthPayments[month]['paid']|default:0 }}]
+                {% endif %}
+            {% endfor %}
+        ];
+        var arrearsAmounts = [
+            {% for month in months %}
+                {% if forloop.first %}[{{ monthPayments[month]['arrears']|default:0 }}]
+                {% else %}, [{{ monthPayments[month]['arrears']|default:0 }}]
+                {% endif %}
+            {% endfor %}
+        ];
+
+        var rentPaymentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Paid Amount',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    data: paidAmounts.flat(),
+                }, {
+                    label: 'Arrears Amount',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    data: arrearsAmounts.flat(),
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

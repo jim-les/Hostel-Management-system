@@ -28,7 +28,10 @@
             height: 40px;
         }
     }
+
 </style>
+
+
 <div class="card-body position-relative">
     <!-- templates/myapp/add_student.html -->
 <form method="post" enctype="multipart/form-data" action="{% url 'add_student' %}">
@@ -76,11 +79,11 @@
             <div class="student_info">
                 <div class="form-group">
                     <label for="rent">Rent Amount</label>
-                    <input type="text" name="rent_amount" class="form-control input_outline" value="3500">
+                    <input type="text" name="rent_amount" class="form-control input_outline rent_amount" value="3500">
                 </div>
                 <div class="form-group">
                     <label for="arrears">Arrears</label>
-                    <input type="text" name="arrears" class="form-control input_outline" value="0.00">
+                    <input type="text" name="arrears" class="form-control input_outline arrears" value="3500">
                 </div>
                 <div class="form-group">
                     <label for="meal" class="mx-4">Meal</label>

@@ -8,10 +8,12 @@
             <th scope="col">Arrears</th>
             <th scope="col">Meal</th>
             <th scope="col">Adm Date</th>
+            {% if user.is_superuser %}
             <th scope="col">Action</th>
+            {% endif %}
         </tr>
     </thead>
-    <tbody>
+    <tbody class="allstudentTableBody">
         {% for student in Students %}
         <tr class="student">
             <th scope="row">{{ forloop.counter }}</th>
@@ -27,11 +29,32 @@
                 {% endif %}
             </td>
             <td>{{ student.adm_date }}</td>
+            {% if user.is_superuser %}
             <td>
                 <a href="{% url 'edit_student' student.id %}" class="btn btn-primary">Edit</a>
                 <a href="{% url 'delete_student' student.id %}" class="btn btn-danger">Delete</a>
             </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<!-- jquery -->
+<!-- jQuery script for filtering -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Event listener for input change
+        $('.search_input').on('keyup', function () {
+            // Get the value from the search input and convert to lowercase
+            var value = $(this).val().toLowerCase();
+
+            // Filter each row in the table
+            $('.allstudentTableBody .student').filter(function () {
+                // Toggle the visibility of the row based on the room number
+                $(this).toggle($(this).find('td').eq(1).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>

@@ -29,68 +29,116 @@
         }
     }
 
+    .transaction_card{
+        /* max-height: 100vh; */
+        /* min-height: 30vh; */
+        height: 80vh;
+        overflow-y: auto;
+    }
+
     .add_transaction_col{
-        display: none; /* Initially hidden */
+        /* display: none; Initially hidden */
     }
 
     .show{
         display: block; /* Show the element */
         height: 85vh;
     }
+
+    .table-wrapper {
+        max-height: 400px; /* Set a fixed height for the table wrapper */
+        overflow-y: auto; /* Enable vertical scrolling */
+        overflow-x: auto; /* Enable horizontal scrolling */
+    }
+
+    table.table {
+        width: 100%; /* Ensure the table width fits within the parent div */
+        display: table; /* Ensure table layout */
+    }
+
+    table.table thead {
+        position: sticky; /* Keep the header sticky */
+        top: 0; /* Stick to the top */
+        background: white; /* Background color to match the table */
+        z-index: 10; /* Place the header above the table rows */
+    }
 </style>
 
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if user.is_superuser %}
+
 <div class="d-flex justify-content-end">
+    
     <div class="text-right d-flex justify-content-center align-items-center m-2 add_transaction_col_btn" data-target=".add_transaction_col">
         <i class="fa fa-plus"></i>
     </div>
 </div>
+{% endif %}
 <div class="row px-4">
+    {% if user.is_superuser %}
     <div class="col-md-8 col-12">
-
-        <div class="card transaction_card" style="height: 80vh;">
-            <div class="card-header text-light w-100">
-                <h4 class="card-title">Transaction List</h4>
-                <p>List of all transactions from 2024 </p>
+    {% else %}
+    <div class="col-md-12 col-12">
+    {% endif %}
+        <div class="card transaction_card">
+            <div class="card-header text-light w-100 sticky-top container-fluid d-flex justify-content-between align-items-end">
+                <div>
+                    <h4 class="card-title">Transaction List</h4>
+                    <p>List of all transactions from 2024 </p>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-success">Download PDF</a>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="search_container w-100 d-flex justify-content-between">
-                    <div>
-                        <i class="fa fa-print"></i>
-                        <span>PRINT</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="" id="" class="form-control input_outline" placeholder="Search">
+            <div class="card-body container-fluid">
+                <div class="search_container w-100 d-flex justify-content-between sticky-top">
+                    <div></div>
+                    <div class="form-group sticky-b">
+                        <input type="text" name="search" id="search" class="form-control input_outline" placeholder="Search" aria-label="Search Transactions">
                     </div>
                 </div>
-                <table class="table table-striped" style="height: 200px; overflow-y: scroll;">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">FULL NAME</th>
-                            <th scope="col">AMOUNT</th>
-                            <th scope="col">MONTH</th>
-                            <th scope="col">RECEIPT</th>
-                            <th scope="col">MPESA REF</th>
-                            <th scope="col">DATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for payment in RentPayment %}
+                <div class="table-wrapper">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <th style="font-size: 11px;" scope="row">{{ forloop.counter }}</th>
-                                <td style="font-size: 11px;">{{ payment.student.user.first_name }} {{ payment.student.user.last_name }}</td>
-                                <td style="font-size: 11px;">{{ payment.amount }}</td>
-                                <td style="font-size: 11px;">{{ payment.month_paid }}</td>
-                                <td style="font-size: 11px;">{{ payment.reciept }}</td>
-                                <td style="font-size: 11px;">{{ payment.mpesa_ref }}</td>
-                                <td style="font-size: 11px;">{{ payment.date_paid }}</td>
+                                <th scope="col">#</th>
+                                <th scope="col">FULL NAME</th>
+                                <th scope="col">AMOUNT</th>
+                                <th scope="col">MONTH</th>
+                                <th scope="col">RECEIPT</th>
+                                <th scope="col">MPESA REF</th>
+                                <th scope="col">DATE</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="transactionBody">
+                            {% for payment in RentPayment %}
+                                <tr>
+                                    <th style="font-size: 11px;" scope="row">{{ forloop.counter }}</th>
+                                    <td style="font-size: 11px;">{{ payment.student.user.first_name }} {{ payment.student.user.last_name }}</td>
+                                    <td style="font-size: 11px;">{{ payment.amount }}</td>
+                                    <td style="font-size: 11px;">{{ payment.month_paid }}</td>
+                                    <td style="font-size: 11px;">{{ payment.reciept }}</td>
+                                    <td style="font-size: 11px;">{{ payment.mpesa_ref }}</td>
+                                    <td style="font-size: 11px;">{{ payment.date_paid }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+    {% if user.is_superuser %}
 
     <div class="col-md-4 col-12 add_transaction_col">
         <div class="card">
@@ -113,7 +161,20 @@
                     </div>
                     <div class="form-group">
                         <label for="month">Month</label>
-                        <input type="text" name="month" id="month" class="form-control input_outline" placeholder="Month">
+                        <select name="month" id="month" class="form-control input_outline">
+                            <option value="january">January</option>
+                            <option value="february">February</option>
+                            <option value="march">March</option>
+                            <option value="april">April</option>
+                            <option value="may">May</option>
+                            <option value="june">June</option>
+                            <option value="july">July</option>
+                            <option value="august">August</option>
+                            <option value="september">September</option>
+                            <option value="october">October</option>
+                            <option value="november">November</option>
+                            <option value="december">December</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="mpesa_ref">Mpesa Ref</label>
@@ -134,10 +195,45 @@
             </div>
         </div>
     </div>
-</div>
+    {% endif %}
 
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+     // filter the table with jquery
+     $(document).ready(function () {
+            // Event listener for input change
+            $('#search').on('keyup', function () {
+            // Get the value from the search input and convert to lowercase
+                var value = $(this).val().toLowerCase();
+                console.log(`Filtering by ${value}`);
+                // Filter each row in the table
+                $('#transactionBody tr').filter(function () {
+                    // Toggle the visibility of the row based on the room number
+                    $(this).toggle($(this).find('td').eq(2).text().toLowerCase().indexOf(value) > -1);
+                    console.log($(this).find('td').eq(2).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+</script>
+
+{% if user.is_superuser %}
+<script>
+     function setMonth() {
+        var d = new Date();
+        var month = d.getMonth();
+        var select = document.getElementById('month');
+        select.selectedIndex = month;
+    }
+
+    // Call the function to set the month
+    setMonth();
+
+    //  function to set the select month to the current month
+   
+
     document.addEventListener('DOMContentLoaded', function() {
+
         var addTransactionBtn = document.querySelector('.add_transaction_col_btn');
         var addTransactionCol = document.querySelector('.add_transaction_col');
 
@@ -174,7 +270,20 @@
                 localStorage.removeItem('transactionConfirmed');
             }
         });
+
+        // Debounce function to limit the rate at which a function can fire
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+       
     });
 </script>
+{% endif %}
+
 
 {% endblock %}

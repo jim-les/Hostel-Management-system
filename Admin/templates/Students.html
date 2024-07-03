@@ -29,6 +29,26 @@
         background-color: #174EA6;
         color: white;
     }
+
+    .confirm_popup{
+        position: fixed;
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        left: 0;
+        top: 0;
+
+    }
+
+    .confirm_popup .card-header{
+        border-radius: 8px 8px 0 0;
+        color: white;
+    }
+
     @media screen and (max-width: 768px){
         body{
             overflow-x: scroll;
@@ -69,15 +89,43 @@
 
 {% comment %} search student popup tab {% endcomment %}
 
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- confirm popup to confirm if to update the arrears for all student on update_rent_btn click -->
+<div class="confirm_popup" id="confirm_popup" style="display: none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>Confirm Update</h3>
+        </div>
+        <div class="card-body">
+            <p>Are you sure you want to update the arrears for all students?</p>
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-danger" id="cancel_update">Cancel</button>
+                <button class="btn btn-success" id="confirm_update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="student_content px-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="search_form">
             <div class="form-group">
-                <input type="text" class="form-control input_outline text-center search_input" placeholder="Name, Amount, Arrears, Room">
+                <input type="text" class="form-control input_outline text-center search_input" placeholder="Filter by Room">
             </div>
         </div>
-        <button class="btn add_student custom_btn" style="font-size: 14px">Add Student</button>
+        {% if user.is_superuser %}
+        <button class="btn add_student custom_btn update_rent_btn" style="font-size: 14px">Update Rent</button>
+        {% endif %}
     </div>
 
     <div class="tab_container my-4 d-flex">
@@ -85,10 +133,13 @@
             <i class="fa fa-user"></i>
             <span>Find Student</span>
         </div>
+        {% if user.is_superuser %}
+
         <div class="b_tab" data-tab="addStudent">
             <i class="fa fa-users"></i>
             <span>New Student</span>
         </div>
+        {% endif %}
         <div class="b_tab" data-tab="allStudents">
             <i class="fa fa-users"></i>
             <span>All Students</span>
@@ -102,17 +153,25 @@
     <div class="tab_content_container w-100">
         <div class="find_student tab_container w-100">
             <div class="customCard card w-100 position-relative">
-                <div class="card-header text-light">
-                    <h3><b>Shadov Student List</b></h3>
-                    <p>Find Student by Student Name</p>
+                <div class="card-header text-light d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3><b>Shadov Student List</b></h3>
+                        <p>Find Student by Student Name</p>
+                    </div>
+                    <div>
+                        <!-- print -->
+                        <a href="{% url 'export_students_csv' %}" class="btn btn-success" style="font-size: 14px;">Export</a>
+                    </div>
                 </div>
                 <div class="card-body position-relative">
                     <div class="content findStudent_content">
                         {% include 'findStudent.html' %}
                     </div>
+                    {% if user.is_superuser %}
                     <div class="content addStudent_content">
                         {% include 'addStudent.html' %}
                     </div>  
+                    {% endif %}
                     <div class="content allStudents_content">
                         {% include 'AllStudents.html' %}
                     </div>  
@@ -155,6 +214,24 @@
             $(`.tab_content_container .${tab}_content`).show();
         });
     });
+
+    // Update Rent Button Click
+    $('.update_rent_btn').click(function() {
+        $('#confirm_popup').show();
+    });
+
+    // Cancel Update Button Click
+    $('#cancel_update').click(function() {
+        $('#confirm_popup').hide();
+    });
+
+    // Confirm Update Button Click
+    $('#confirm_update').click(function() {
+        window.location.href = "{% url 'update_arrears' %}";
+        $('#confirm_popup').hide();
+    });
+
 </script>
+
 
 {% endblock %}
