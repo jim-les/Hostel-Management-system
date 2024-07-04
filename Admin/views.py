@@ -346,8 +346,36 @@ def print_transactions(requests):
         ])
     return response
 
+@login_required
 def backupPage(request):
-    return render(request, 'backup.html')
+    # Define the path to the SQLite database file
+    db_path = os.path.join(settings.BASE_DIR, 'db.sqlite3')
+    backup_dir = os.path.join(settings.BASE_DIR, 'backup')
+
+    # Ensure the backup directory exists
+    os.makedirs(backup_dir, exist_ok=True)
+
+    # Fetch the last backup file details
+    backup_files = [f for f in os.listdir(backup_dir) if os.path.isfile(os.path.join(backup_dir, f))]
+    backup_files.sort(key=lambda f: os.path.getmtime(os.path.join(backup_dir, f)), reverse=True)
+    
+    if backup_files:
+        last_backup_file = backup_files[0]
+        last_backup_path = os.path.join(backup_dir, last_backup_file)
+        last_backup_time = datetime.fromtimestamp(os.path.getmtime(last_backup_path)).strftime('%Y-%m-%d %H:%M:%S')
+        last_backup_size = os.path.getsize(last_backup_path) / 1024  # size in KB
+    else:
+        last_backup_file = None
+        last_backup_time = None
+        last_backup_size = None
+
+    context = {
+        'last_backup_file': last_backup_file,
+        'last_backup_time': last_backup_time,
+        'last_backup_size': f"{last_backup_size:.2f} KB" if last_backup_size else None,
+    }
+
+    return render(request, 'backup.html', context)
 
 @login_required
 def backup_database(request):
