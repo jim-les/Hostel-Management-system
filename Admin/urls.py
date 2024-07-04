@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import include, path
-from .views import home, student, add_student, edit_student, delete_student, get_student_details, search_student, transaction, add_rentpayment, get_student_rent_payments,delete_rent_payment, underContruction, get_dashboard_data, send_sms_view, update_arrears, export_students_csv, statistics
+from .views import *
 
 urlpatterns = [
     path('', home, name='home'),
@@ -17,8 +17,11 @@ urlpatterns = [
     path('add_rentpayment/', add_rentpayment, name='add_rentpayment'),
     path('underConstruction', underContruction, name='underContruction'),
     path('get_dashboard_data/', get_dashboard_data, name='get_dashboard_data'),
-    path('send-sms/', send_sms_view, name='send_sms'),
     path('export-students-csv/', export_students_csv, name='export_students_csv'),
     path('statistics/', statistics, name='statistics'),
+    path('print_transactions/', print_transactions, name='print_transactions'),
+    path('backuppage/', backupPage, name='backupPage'),
+    path('backup/', backup_database, name='backup_database'),
+    path('restore/', restore_database, name='restore_database'),
 ]
     

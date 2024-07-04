@@ -76,28 +76,28 @@
                 </div>
 
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'statistics/' %}active{% endif %}">
-                    <a href="{% url 'statistics' %}">
+                    <a href="{% url 'underContruction' %}">
                         <i class="fa fa-chart-line"></i>
                         <span>Statistics</span>
                     </a>
                 </div>
 
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
-                    <a href="{% url 'transaction' %}">
+                    <a href="{% url 'underContruction' %}">
                         <i class="fas fa-envelope"></i>
                         <span>Sms</span>
                     </a>
                 </div>
 
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
-                    <a href="{% url 'transaction' %}">
+                    <a href="{% url 'backupPage' %}">
                         <i class="fas fa-money-check-alt"></i>
                         <span>Backup</span>
                     </a>
                 </div>
 
                 <div class="sidebar_item {% if request.path|slice:"1:" == 'loan/' %}active{% endif %}">
-                    <a href="{% url 'transaction' %}">
+                    <a href="{% url 'underContruction' %}">
                         <i class="fas fa-money-check-alt"></i>
                         <span>Settings</span>
                     </a>
@@ -125,7 +125,7 @@
         </div>   
         
         <div class="main_content">
-            <div class="top_bar py-4 d-flex justify-content-between px-4">
+            <div class="top_bar py-4 d-flex justify-content-between px-4 sticky-top" style="z-index: 1500; background-color: white;">
                 <div class="top_bar_items">
                     <div class="fa fa-bars" id="toggleSidebarBtn" style="font-size: 20px;"></div>
                 </div>
@@ -182,5 +182,8 @@
             $('.sidebar_container').removeClass('open');
         }
     });
+
+
+
 </script>
 </html>

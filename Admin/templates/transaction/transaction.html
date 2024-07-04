@@ -27,18 +27,20 @@
         .card-header{
             width: 100%;
         }
+        .transaction_card{
+            height: 100vh;
+        }
+        .table-wrapper {
+            min-height: 100%; /* Set a fixed height for the table wrapper */
+        }
+
     }
 
     .transaction_card{
-        /* max-height: 100vh; */
-        /* min-height: 30vh; */
         height: 80vh;
         overflow-y: auto;
     }
 
-    .add_transaction_col{
-        /* display: none; Initially hidden */
-    }
 
     .show{
         display: block; /* Show the element */
@@ -62,6 +64,43 @@
         background: white; /* Background color to match the table */
         z-index: 10; /* Place the header above the table rows */
     }
+
+    .transactionPrintPopup{
+        position: fixed;
+        z-index: 2010;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+    
+    }
+
+    .transactionPrintPopupContent{
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%;
+        border-radius: 8px;
+    
+    }
+    .transactionPrintPopupClose{
+        cursor: pointer;
+    }
+
+    .transactionPrintPopupClose:hover{
+        background-color: aqua;
+    }
+    table.table td , th{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
 </style>
 
 {% if messages %}
@@ -74,6 +113,45 @@
     </div>
 {% endif %}
 
+<!-- print transaction card popup with option for select month -->
+<div class="transactionPrintPopup">
+    <div class="transactionPrintPopupContent">
+        <div class="transactionPrintPopupHeader d-flex justify-content-between align-items-center">
+            <h2 class="text-primary">Print Transaction</h2>
+            <span class="transactionPrintPopupClose text-right bg-primary py-2 px-3 text-light" style="border-radius: 12px;">&times;</span>
+        </div>
+        <div class="d-flex justify-content-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvTnCHYKQCAjMcRuz_PGGaO7dYL1q494Wzjg&s" alt="">
+        </div>
+        <div class="transactionPrintPopupBody">
+            <form action= "{% url 'print_transactions' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="month">Month</label>
+                    <select name="month" id="month" class="form-control input_outline">
+                        <option value="all">All</option>
+                        <option value="january">January</option>
+                        <option value="february">February</option>
+                        <option value="march">March</option>
+                        <option value="april">April</option>
+                        <option value="may">May</option>
+                        <option value="june">June</option>
+                        <option value="july">July</option>
+                        <option value="august">August</option>
+                        <option value="september">September</option>
+                        <option value="october">October</option>
+                        <option value="november">November</option>
+                        <option value="december">December</option>
+                    </select>
+                </div>  
+                <div class="form-group d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-5">Print</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% if user.is_superuser %}
 
 <div class="d-flex justify-content-end">
@@ -83,26 +161,26 @@
     </div>
 </div>
 {% endif %}
-<div class="row px-4">
+<div class="row px-md-4 px-1 py-3 py-md-0">
     {% if user.is_superuser %}
     <div class="col-md-8 col-12">
     {% else %}
-    <div class="col-md-12 col-12">
+    <div class="col-md-12 col-12 ">
     {% endif %}
         <div class="card transaction_card">
-            <div class="card-header text-light w-100 sticky-top container-fluid d-flex justify-content-between align-items-end">
+            <div class="card-header text-light w-100 sticky-top container-fluid d-flex justify-content-between align-items-end" style="z-index: 100;">
                 <div>
                     <h4 class="card-title">Transaction List</h4>
                     <p>List of all transactions from 2024 </p>
                 </div>
                 <div>
-                    <a href="#" class="btn btn-success">Download PDF</a>
+                    <a href="#" class="btn btn-success print_transactions">Download PDF</a>
                 </div>
             </div>
-            <div class="card-body container-fluid">
-                <div class="search_container w-100 d-flex justify-content-between sticky-top">
+            <div class="card-body container-fluid sticky-top" style="z-index: 220;">
+                <div class="search_container w-100 d-flex justify-content-between">
                     <div></div>
-                    <div class="form-group sticky-b">
+                    <div class="form-group ">
                         <input type="text" name="search" id="search" class="form-control input_outline" placeholder="Search" aria-label="Search Transactions">
                     </div>
                 </div>
@@ -111,7 +189,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">FULL NAME</th>
+                                <th scope="col" style="min-width: 120px;">FULL NAME</th>
                                 <th scope="col">AMOUNT</th>
                                 <th scope="col">MONTH</th>
                                 <th scope="col">RECEIPT</th>
@@ -282,6 +360,14 @@
 
        
     });
+
+    $(".print_transactions").click(()=> {
+        $(".transactionPrintPopup").css("display", "flex")
+    })
+
+    $(".transactionPrintPopupClose").click(()=> {
+        $(".transactionPrintPopup").css("display", "none")
+    })
 </script>
 {% endif %}
 

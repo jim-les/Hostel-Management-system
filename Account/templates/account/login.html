@@ -258,12 +258,32 @@ img {
             <button type="submit" class="login__button">Login</button>
 
             <p class="login__register">
-               Don't have an account? <a href="#">Register</a>
+               <!-- Don't have an account? <a href="#">Register</a> -->
             </p>
          </form>
       </div>
       
       <!--=============== MAIN JS ===============-->
       <script src="assets/js/main.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const passwordField = document.getElementById('login-pass');
+          const eyeIcon = document.getElementById('login-eye');
+        
+          eyeIcon.addEventListener('click', () => {
+            // Toggle the type attribute
+            if (passwordField.type === 'password') {
+              passwordField.type = 'text';
+              eyeIcon.classList.remove('ri-eye-off-line');
+              eyeIcon.classList.add('ri-eye-line');
+            } else {
+              passwordField.type = 'password';
+              eyeIcon.classList.remove('ri-eye-line');
+              eyeIcon.classList.add('ri-eye-off-line');
+            }
+          });
+        });
+        </script>
+        
    </body>
 </html>

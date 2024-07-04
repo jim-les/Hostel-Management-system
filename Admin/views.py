@@ -1,13 +1,17 @@
 import datetime
+import os
 import csv
+import shutil
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from Tenants.models import Student, RentPayment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from .twilio_utils import *
+from django.http import HttpResponse, HttpResponseServerError
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 @login_required
 def home(request):
@@ -188,9 +192,10 @@ def add_rentpayment(request):
         reciept = request.POST.get('reciept')
         
         student = Student.objects.get(id=full_name)
-        # check if renpayment with reciept already exists
-        if RentPayment.objects.filter(reciept=reciept).exists():
-            message = 'Rent payment with that reciept already exists'
+        # check if renpayment with mpesa_ref already exists
+        
+        if RentPayment.objects.filter(mpesa_ref=mpesa_ref).exists():
+            message = f'Rent payment with that mpesa ref ({mpesa_ref}) already exists'
             messages.error(request, message)
             return redirect('transaction')
         
@@ -271,22 +276,12 @@ def get_dashboard_data(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
     
-
-def send_sms_view(request):
-    to = request.GET.get('to')
-    message = request.GET.get('message')
-    
-    if to and message:
-        sid = send_sms(to, message)
-        return HttpResponse(f'SMS sent with SID: {sid}')
-    else:
-        return HttpResponse('Missing "to" or "message" parameter.')
-    
-
+import datetime
 def export_students_csv(request):
     # Define the response with the appropriate content type for CSV
+    date = datetime.datetime.now().strftime('%Y-%m-%d')
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="students.csv"'
+    response['Content-Disposition'] = f'attachment; filename="students-{date}.csv"'
 
     # Create a CSV writer object
     writer = csv.writer(response)
@@ -322,3 +317,92 @@ def statistics(request):
         'total_meals': total_meals
     }
     return render(request, 'statistics/statistics.html', context)
+
+def print_transactions(requests):
+    date = datetime.datetime.now().strftime('%Y-%m-%d')
+    month = requests.POST.get('month')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="transactions-{date}.csv"'
+
+    if month:
+        if month == "all":
+            transactions = RentPayment.objects.all()
+        
+        else:
+            transactions = RentPayment.objects.filter(month_paid=month)
+    else:
+        return HttpResponse("Invalid request")
+    
+    writer = csv.writer(response)
+    writer.writerow(['Full Name', 'Amount', 'Month Paid', 'Mpesa Ref', 'Date Paid', 'Reciept'])
+    for transaction in transactions:
+        writer.writerow([
+            transaction.student.user.first_name + " " + transaction.student.user.last_name,
+            transaction.amount,
+            transaction.month_paid,
+            transaction.mpesa_ref,
+            transaction.date_paid,
+            transaction.reciept
+        ])
+    return response
+
+def backupPage(request):
+    return render(request, 'backup.html')
+
+@login_required
+def backup_database(request):
+    try:
+        # Define the path to the SQLite database file
+        db_path = os.path.join(settings.BASE_DIR, 'db.sqlite3')
+
+        # Check if the database file exists
+        if not os.path.exists(db_path):
+            return HttpResponseServerError("Database file does not exist.")
+
+        # Define the backup file path
+        backup_path = os.path.join(settings.BASE_DIR, 'backup', 'db_backup.sqlite3')
+
+        # Ensure the backup directory exists
+        os.makedirs(os.path.dirname(backup_path), exist_ok=True)
+
+        # Copy the database file to the backup path
+        shutil.copy2(db_path, backup_path)
+
+        # Read the file content to return as a response
+        with open(backup_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/x-sqlite3')
+            response['Content-Disposition'] = f'attachment; filename="db_backup.sqlite3"'
+
+        # Optionally delete the backup file after sending it
+        os.remove(backup_path)
+
+        return response
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred during backup: {str(e)}")
+    
+
+def restore_database(request):
+    if request.method == 'POST':
+        backup_file = request.FILES['backup_file']
+        backup_path = default_storage.save('backup_file.sqlite3', ContentFile(backup_file.read()))
+        new_db_path = default_storage.path(backup_path)
+        current_db_path = os.path.join(settings.BASE_DIR, 'db.sqlite3')
+
+        # Ensure the current database is safely replaced
+        try:
+            # Backup current database before replacing
+            current_db_backup_path = os.path.join(settings.BASE_DIR, 'db_backup_current.sqlite3')
+            shutil.copy2(current_db_path, current_db_backup_path)
+
+            # Replace the current database with the uploaded one
+            os.replace(new_db_path, current_db_path)
+
+            messages.success(request, 'Database restored successfully. Please restart the server.')
+        except Exception as e:
+            messages.error(request, f"An error occurred during restoration: {str(e)}")
+            return redirect('backupPage')
+
+        return redirect('backupPage')
+    else:
+        messages.error(request, "Invalid request method for restoration.")
+        return redirect('backupPage')

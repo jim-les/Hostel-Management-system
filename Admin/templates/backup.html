@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<style>
+    .backupcontainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.backupcontainer h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.backupcontainer p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.backup-actions,
+.restore-actions {
+    margin-bottom: 20px;
+}
+
+.backup-actions .btn,
+.restore-actions .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.backup-actions .btn:hover,
+.restore-actions .btn:hover {
+    background-color: #0056b3;
+}
+
+.backup-info {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.backup-info h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.backup-info p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.download-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+.file-input {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+}
+
+@media (max-width: 600px) {
+    .backupcontainer {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .backupcontainer h1 {
+        font-size: 20px;
+    }
+
+    .backupcontainer p {
+        font-size: 14px;
+    }
+
+    .backup-actions .btn,
+    .restore-actions .btn,
+    .download-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+</style>
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="backupcontainer">
+    <h1>Backup and Restore Database</h1>
+    <p>Ensure your data is safe by regularly backing up the database. You can also restore a previously saved backup.</p>
+    
+    <!-- Backup Section -->
+    <div class="backup-actions">
+        <form action="{% url 'backup_database' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn backup-btn">Backup Now</button>
+        </form>
+    </div>
+
+    <div class="backup-info">
+        <h2>Last Backup</h2>
+        <p><strong>Date:</strong> {{ last_backup_date }}</p>
+        <p><strong>Size:</strong> {{ last_backup_size }}</p>
+        <a href="{{ last_backup_url }}" class="btn download-btn">Download Last Backup</a>
+    </div>
+    
+    <!-- Restore Section -->
+    <div class="restore-actions">
+        <h2>Restore Backup</h2>
+        <form action="{% url 'restore_database' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="backup_file" class="file-input" required>
+            <button type="submit" class="btn restore-btn">Restore Backup</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
