@@ -11,11 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from dotenv import load_dotenv
 import os
 from django.contrib.messages import constants as messages
 
-load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'defaultdb',  # The name of the database
         'USER': 'avnadmin',  # Your MySQL username
-         'PASSWORD': os.getenv('DATABASE_PASSWORD'), # Your MySQL password
+        'PASSWORD': 'AVNS_ALSsG2rk3lWV4DiIddR',  # Your MySQL password
         'HOST': 'mysql-shadav-shadav.l.aivencloud.com',  # The host address of the MySQL server
         'PORT': '25915',  # The port number for the MySQL server
         'OPTIONS': {
