@@ -76,8 +76,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ShadavHostel.wsgi.application'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Adjust the path as needed
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'defaultdb',  # The name of the database
+        'USER': 'avnadmin',  # Your MySQL username
+        'PASSWORD': 'AVNS_ALSsG2rk3lWV4DiIddR',  # Your MySQL password
+        'HOST': 'mysql-shadav-shadav.l.aivencloud.com',  # The host address of the MySQL server
+        'PORT': '25915',  # The port number for the MySQL server
+        'OPTIONS': {
+            'ssl': {
+                'ca': BASE_DIR / 'ca.pem',  # Update this path
+            }
+        }
     }
 }
 
