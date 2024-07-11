@@ -19,7 +19,7 @@ def home(request):
     students = Student.objects.all()
     current_month_amount = 0
     student_meals = Student.objects.filter(has_food = True).count()
-    
+    total_student_with_arrears = Student.objects.filter(arrears__gt=0).count() 
     for student in students:
         current_month_amount += student.rent_amount
     
@@ -27,6 +27,7 @@ def home(request):
         "Students": students_count,
         "current_month_amount": current_month_amount,
         "student_meals": student_meals,
+        "total_student_with_arrears": total_student_with_arrears,
     }
     return render(request, 'dashboard.html', context)
 
@@ -157,7 +158,8 @@ def get_student_details(request):
 
 def search_student(request):
     query = request.GET.get('q', '')
-    students = Student.objects.filter(user__username__icontains=query)
+    # search with both first_name or last_name
+    students = Student.objects.filter(user__first_name__icontains=query) | Student.objects.filter(user__last_name__icontains=query)
     context = {
         'Students': students
     }

@@ -55,6 +55,33 @@
     </tbody>
 </table>
 
+<style>
+    .filter_with_meal_check_box{
+        margin: 10px 0;
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 100%;
+        width: 70px;
+        height: 70px;
+    }
+    .filter_with_meal_check_box label{
+        font-size: 1.2em;
+    }
+    .filter_with_meal_check_box input{
+        width: 20px;
+    }
+</style>
+
+<div class="filter_with_meal_check_box">
+    <div class="form-group">
+        <input type="checkbox" class="form-control" style="width: 20px;" id="filter_with_meal">
+        <label for="filter_with_meal">Meal</label>
+    </div>    
+</div>
+
 <!-- jquery -->
 <!-- jQuery script for filtering -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -71,5 +98,18 @@
                 $(this).toggle($(this).find('td').eq(1).text().toLowerCase().indexOf(value) > -1);
             });
         });
+
+        // Event listener for checkbox change
+        $('#filter_with_meal').on('change', function () {
+            // Get the value from the search input and convert to lowercase
+            var value = $(this).is(':checked');
+
+            // Filter each row in the table
+            $('.allstudentTableBody .student').filter(function () {
+                // Toggle the visibility of the row based on the room number
+                $(this).toggle($(this).find('td').eq(4).find('input').is(':checked') == value);
+            });
+        });
+
     });
 </script>

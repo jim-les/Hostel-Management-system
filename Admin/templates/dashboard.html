@@ -41,8 +41,12 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 id="total_students">0</h3>
                         <i class="fa fa-users" ></i>
+                        <br>
                     </div>
                     <h6>Students</h6>
+                    <h5></h5>
+                    <h6>Student with arrears: {{total_student_with_arrears}}</h6>
+
                 </div>
             </div>
         </div>
@@ -144,7 +148,7 @@
 
     console.log(`Bellow is the : ${month_payment_totals}`);
     const data = {
-        labels: ['Total Amount', 'Current paid'],
+        labels: [ 'Current paid', 'Total Amount'],
         datasets: [{
             data: [month_payment_totals, month_total_amount], // Replace these values with actual total_amount and rent
             backgroundColor: ['#36A2EB', '#FF6384'],
