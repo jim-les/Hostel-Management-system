@@ -60,15 +60,16 @@
         margin: 10px 0;
         position: fixed;
         bottom: 0px;
-        right: 0px;
-        padding: 20px;
+        right: 20px;
+        padding: 18px;
         background-color: white;
-        border-radius: 100%;
-        width: 70px;
-        height: 70px;
+        border-radius: 30px;
+        width: 60px;
+        min-height: 70px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, .6); 
     }
     .filter_with_meal_check_box label{
-        font-size: 1.2em;
+        font-size: .9em;
     }
     .filter_with_meal_check_box input{
         width: 20px;
@@ -77,39 +78,78 @@
 
 <div class="filter_with_meal_check_box">
     <div class="form-group">
+        <input type="checkbox" class="form-control" style="width: 20px;" id="filter_with_arrears">
+        <label for="filter_with_meal">Arrears</label>
+    </div>    
+    <div class="form-group">
         <input type="checkbox" class="form-control" style="width: 20px;" id="filter_with_meal">
         <label for="filter_with_meal">Meal</label>
     </div>    
 </div>
 
+<div class="filter_with_arrears_check_box">
+</div>
+
+
 <!-- jquery -->
+<!-- jQuery script for filtering -->
 <!-- jQuery script for filtering -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Event listener for input change
+        // Event listener for search input
         $('.search_input').on('keyup', function () {
             // Get the value from the search input and convert to lowercase
             var value = $(this).val().toLowerCase();
 
             // Filter each row in the table
-            $('.allstudentTableBody .student').filter(function () {
-                // Toggle the visibility of the row based on the room number
-                $(this).toggle($(this).find('td').eq(1).text().toLowerCase().indexOf(value) > -1);
-            });
+            filterTable();
         });
 
         // Event listener for checkbox change
         $('#filter_with_meal').on('change', function () {
-            // Get the value from the search input and convert to lowercase
-            var value = $(this).is(':checked');
-
-            // Filter each row in the table
-            $('.allstudentTableBody .student').filter(function () {
-                // Toggle the visibility of the row based on the room number
-                $(this).toggle($(this).find('td').eq(4).find('input').is(':checked') == value);
-            });
+            filterTable();
         });
 
+        $('#filter_with_arrears').on('change', function () {
+            filterTable();
+        });
+
+        function filterTable() {
+            // Get the value from the checkboxes
+            var mealChecked = $('#filter_with_meal').is(':checked');
+            var arrearsChecked = $('#filter_with_arrears').is(':checked');
+
+            // Get the value from the search input and convert to lowercase
+            var searchValue = $('.search_input').val().toLowerCase();
+
+            // Filter each row in the table
+            $('.allstudentTableBody .student').each(function () {
+                var row = $(this);
+                var mealCheckedInRow = row.find('td').eq(4).find('input').is(':checked');
+                var arrearsInRow = parseFloat(row.find('td').eq(3).text());
+                var searchText = row.find('td').eq(1).text().toLowerCase();
+
+                var showRow = true;
+
+                // Filter based on search input
+                if (searchValue && searchText.indexOf(searchValue) === -1) {
+                    showRow = false;
+                }
+
+                // Filter based on meal checkbox
+                if (mealChecked !== mealCheckedInRow) {
+                    showRow = false;
+                }
+
+                // Filter based on arrears checkbox
+                if (arrearsChecked && arrearsInRow <= 0) {
+                    showRow = false;
+                }
+
+                // Show or hide the row based on all filters
+                row.toggle(showRow);
+            });
+        }
     });
 </script>
