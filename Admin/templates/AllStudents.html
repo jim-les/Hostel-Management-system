@@ -99,57 +99,31 @@
     $(document).ready(function () {
         // Event listener for search input
         $('.search_input').on('keyup', function () {
-            // Get the value from the search input and convert to lowercase
             var value = $(this).val().toLowerCase();
 
-            // Filter each row in the table
-            filterTable();
-        });
-
-        // Event listener for checkbox change
-        $('#filter_with_meal').on('change', function () {
-            filterTable();
-        });
-
-        $('#filter_with_arrears').on('change', function () {
-            filterTable();
-        });
-
-        function filterTable() {
-            // Get the value from the checkboxes
-            var mealChecked = $('#filter_with_meal').is(':checked');
-            var arrearsChecked = $('#filter_with_arrears').is(':checked');
-
-            // Get the value from the search input and convert to lowercase
-            var searchValue = $('.search_input').val().toLowerCase();
-
-            // Filter each row in the table
-            $('.allstudentTableBody .student').each(function () {
-                var row = $(this);
-                var mealCheckedInRow = row.find('td').eq(4).find('input').is(':checked');
-                var arrearsInRow = parseFloat(row.find('td').eq(3).text());
-                var searchText = row.find('td').eq(1).text().toLowerCase();
-
-                var showRow = true;
-
-                // Filter based on search input
-                if (searchValue && searchText.indexOf(searchValue) === -1) {
-                    showRow = false;
-                }
-
-                // Filter based on meal checkbox
-                if (mealChecked !== mealCheckedInRow) {
-                    showRow = false;
-                }
-
-                // Filter based on arrears checkbox
-                if (arrearsChecked && arrearsInRow <= 0) {
-                    showRow = false;
-                }
-
-                // Show or hide the row based on all filters
-                row.toggle(showRow);
+            $('.allstudentTableBody tr').filter(function () {
+                var roomNumber = $(this).find('td').eq(1).text().toLowerCase();
+                $(this).toggle(roomNumber.indexOf(value) > -1);
             });
-        }
+        });
+
+        // Event listener for filtering by checkboxes
+        $('#filter_with_arrears, #filter_with_meal').on('change', function () {
+            var filterArrears = $('#filter_with_arrears').is(':checked');
+            var filterMeal = $('#filter_with_meal').is(':checked');
+
+            $('.allstudentTableBody tr').each(function () {
+                var show = true;
+                if (filterArrears) {
+                    var arrears = $(this).find('td').eq(3).text().trim().toLowerCase();
+                    show = show && (parseFloat(arrears) > 0);
+                }
+                if (filterMeal) {
+                    var meal = $(this).find('td').eq(4).find('input').is(':checked');
+                    show = show && meal;
+                }
+                $(this).toggle(show);
+            });
+        });
     });
 </script>
