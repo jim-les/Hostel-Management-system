@@ -196,10 +196,10 @@ def add_rentpayment(request):
         student = Student.objects.get(id=full_name)
         # check if renpayment with mpesa_ref already exists
         
-        if RentPayment.objects.filter(mpesa_ref=mpesa_ref).exists():
-            message = f'Rent payment with that mpesa ref ({mpesa_ref}) already exists'
-            messages.error(request, message)
-            return redirect('transaction')
+        # if RentPayment.objects.filter(mpesa_ref=mpesa_ref).exists():
+        #     message = f'Rent payment with that mpesa ref ({mpesa_ref}) already exists'
+        #     messages.error(request, message)
+        #     return redirect('transaction')
         
         RentPayment.objects.create(
             student=student,

@@ -30,7 +30,7 @@ class RentPayment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     month_paid = models.CharField(max_length=100)
-    mpesa_ref = models.CharField(max_length=15)
+    mpesa_ref = models.CharField(max_length=15, null=True)
     date_paid = models.DateTimeField(auto_now_add=True)
     reciept = models.CharField(max_length=15, null=True)
 
